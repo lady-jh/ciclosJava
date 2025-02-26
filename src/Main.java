@@ -97,7 +97,7 @@ class Dados {
     }
 }
 
-//24/02/25 EJERCICIO PIEDRA PAPEL O TIJERA
+//25/02/25 EJERCICIO PIEDRA PAPEL O TIJERA
 class ppt {
     public static void main(String[] args) {
         int vjugador1=0,vjugador2=0;
@@ -138,7 +138,7 @@ class ppt {
     }
 }
 
-//24/02/25 EJERCICIO VOTACIONES
+//25/02/25 EJERCICIO VOTACIONES
 class votaciones {
     public static void main(String[] args) {
         Scanner teclado=new Scanner(System.in);
