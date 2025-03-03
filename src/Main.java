@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 //24/02/25 EJERCICIO ALCANCIA
@@ -205,6 +207,7 @@ class votaciones {
                                 case 4 -> System.out.println("Volviendo al menú principal...");
                                 default -> System.out.println("No es una opción válida.");
                             }
+                        }else{System.out.println("Volviendo al menú principal...");
                         }
                     } while (menuvoto != 4);
                 }
@@ -262,3 +265,82 @@ class votaciones {
         teclado.close();
     }
 }
+
+//03/03/2025 EJERCICIO CUENTA BANCARIA
+class CuentaBancaria {
+    public static void main(String[] args) {
+        Operaciones cuenta1 = new Operaciones("Johana", 4891968, 1);
+        Operaciones cuenta2 = new Operaciones("Sebastian", 1578962, 2);
+        Operaciones cuenta3 = new Operaciones();
+        cuenta3.setTitular("Alejandra");
+        cuenta3.setSaldo(7601621);
+        cuenta3.setNumeroCuenta(3);
+
+        List<Operaciones> lst=new ArrayList<>();
+        lst.add(cuenta1);
+        lst.add(cuenta2);
+        lst.add(cuenta3);
+        Scanner teclado = new Scanner(System.in);
+        int menupr;
+
+        do {
+            System.out.println("\n--------Cuenta Bancaria--------");
+            System.out.println("1. Depositar dinero");
+            System.out.println("2. Retirar dinero");
+            System.out.println("3. Mostrar información de la cuenta");
+            System.out.println("4. Salir.");
+            System.out.println("\nLas cuentas disponibles son:");
+            for(Operaciones milist:lst){
+                System.out.println(milist);
+            }
+
+            System.out.print("Digite la opción: ");
+            menupr = teclado.nextInt();
+
+            switch (menupr) {
+                case 1 -> {
+                    System.out.println("\nDepositar dinero");
+                    System.out.print("Ingrese el número de la cuenta: ");
+                    int numCuenta = teclado.nextInt();
+
+                    if (numCuenta==cuenta1.getNumeroCuenta()) {
+                        cuenta1.recibirDinero();
+                    } else if (numCuenta==cuenta2.getNumeroCuenta()) {
+                        cuenta2.recibirDinero();
+                    } else if (numCuenta==cuenta3.getNumeroCuenta()) {
+                        cuenta3.recibirDinero();
+                    } else {
+                        System.out.println("Número de cuenta no valido.");
+                    }
+                }
+
+                case 2 -> {
+                    System.out.println("\nRetirar dinero");
+                    System.out.print("Ingrese el número de la cuenta: ");
+                    int numCuenta = teclado.nextInt();
+
+                    if (numCuenta==cuenta1.getNumeroCuenta()) {
+                        cuenta1.retirarDinero();
+                    }else if (numCuenta==cuenta2.getNumeroCuenta()) {
+                        cuenta2.retirarDinero();
+                    }else if (numCuenta==cuenta3.getNumeroCuenta()) {
+                        cuenta3.retirarDinero();
+                    }else{
+                        System.out.println("Número de cuenta no válido.");
+                    }
+                }
+
+                case 3 -> {
+                    System.out.println("\nMostrar información de la cuenta");
+                    for(Operaciones milist:lst){
+                        System.out.println(milist);
+                    }
+                }
+
+                case 4 -> System.out.println("\nSaliendo de la cuenta");
+                default -> System.out.println("\nSaliendo del banco");
+            }
+        } while (menupr != 4);
+    }
+}
+
