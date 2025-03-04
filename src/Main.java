@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 //24/02/25 EJERCICIO ALCANCIA
@@ -343,4 +344,37 @@ class CuentaBancaria {
         } while (menupr != 4);
     }
 }
+
+//04/03/25 EJERCICIO RULETA RUSA
+class RuletaRusa {
+    public static void main(String[] args) {
+        RuletaMetodos ruleta = new RuletaMetodos();
+        int menupr;
+        Scanner scanner = new Scanner(System.in);
+        boolean jugando = true;
+
+        do {
+            System.out.println("Ruleta rusa");
+            System.out.println("1. Disparar");
+            System.out.println("2. Salir");
+            System.out.print("Digite la opción: ");
+            menupr = scanner.nextInt();
+
+            switch (menupr) {
+                case 1 -> {
+                        if (ruleta.disparar()) {
+                            System.out.println("\nPerdiste :(");
+                        }else{
+                            System.out.println("\nSobreviviste :)");
+                        }
+
+                }
+                case 2 -> System.out.println("Saliendo del juego");
+                default -> System.out.println("Opción no valida, intente de nuevo.");
+            }
+        }while(jugando && menupr!=2);
+    }
+}
+
+
 
