@@ -271,7 +271,7 @@ class votaciones {
 class CuentaBancaria {
     public static void main(String[] args) {
         Operaciones cuenta1 = new Operaciones("Johana", 4891968, 1);
-        Operaciones cuenta2 = new Operaciones("Sebastian", 1578962, 2);
+        Operaciones cuenta2 = new Operaciones("Nicolas", 1578962, 2);
         Operaciones cuenta3 = new Operaciones();
         cuenta3.setTitular("Alejandra");
         cuenta3.setSaldo(7601621);
@@ -349,12 +349,11 @@ class CuentaBancaria {
 class RuletaRusa {
     public static void main(String[] args) {
         RuletaMetodos ruleta = new RuletaMetodos();
-        int menupr;
         Scanner scanner = new Scanner(System.in);
-        boolean jugando = true;
+        int menupr;
 
-        do {
-            System.out.println("Ruleta rusa");
+        do{
+            System.out.println("\nRuleta rusa");
             System.out.println("1. Disparar");
             System.out.println("2. Salir");
             System.out.print("Digite la opción: ");
@@ -363,16 +362,77 @@ class RuletaRusa {
             switch (menupr) {
                 case 1 -> {
                         if (ruleta.disparar()) {
-                            System.out.println("\nPerdiste :(");
+                            System.out.println("\nPerdiste :(\nTu posición fue "+ruleta.getPosicionActual());
+                            menupr=2;
                         }else{
-                            System.out.println("\nSobreviviste :)");
+                            System.out.println("\nSobreviviste :)\nTu posición fue "+(ruleta.getPosicionActual()-1));
                         }
-
                 }
-                case 2 -> System.out.println("Saliendo del juego");
+                case 2 ->{
+                    System.out.println("\nSaliendo del juego...");
+                    break;
+                }
                 default -> System.out.println("Opción no valida, intente de nuevo.");
             }
-        }while(jugando && menupr!=2);
+        }while(menupr!=2);
+    }
+}
+
+//10/03/25 QUIZ PRODUCTO EN UNA TIENDA
+class Tienda {
+    public static void main(String[] args) {;
+        Scanner scanner = new Scanner(System.in);
+        int menupr;
+
+        do{
+            System.out.println("\n-----------Tienda----------");
+            System.out.println("1. Crear producto");
+            System.out.println("2. Vender producto");
+            System.out.println("3. Reponer stock");
+            System.out.println("4. Mostrar información");
+            System.out.println("5. Aumentar precio");
+            System.out.println("6. Valor total del inventario");
+            System.out.println("7. Comparar precios");
+            System.out.println("8. Salir");
+            System.out.print("Digite la opción: ");
+            menupr = scanner.nextInt();
+
+            switch (menupr) {
+                case 1 -> {
+                    Producto.crearProducto();
+                    System.out.println("Producto agregado correctamente.");
+                }
+                case 2 ->{
+                    System.out.println("\nElija uno de los siguientes productos");
+                    Producto.mostrarInfo();
+                    Producto.venderProducto();
+                }
+                case 3 ->{
+                    System.out.println("\nElija uno de los siguientes productos");
+                    Producto.mostrarInfo();
+                    Producto.reponerStock();
+                }
+                case 4 ->{
+                    System.out.println("\nLos productos son");
+                    Producto.mostrarInfo();
+                }
+                case 5 ->{
+                    System.out.println("\nElija uno de los siguientes productos");
+                    Producto.mostrarInfo();
+                    Producto.aumentarPrecio();
+                }
+                case 6 ->{
+                    System.out.println("El valor total del inventario es: " + Producto.valorTInventario()+"$");
+                }
+                case 7 ->{
+                    System.out.println("\nElija uno de los siguientes productos para comparar");
+                    Producto.mostrarInfo();
+                    Producto.compararPrecios();
+                }
+                case 8 -> System.out.println("\nSaliendo de la tienda...");
+                default -> System.out.println("Opción no valida, intente de nuevo.");
+            }
+        }while(menupr!=8);
     }
 }
 

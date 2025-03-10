@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static java.lang.System.out;
+
 public class RuletaMetodos {
     List<Integer> tambor;
     int bala;
@@ -56,17 +58,19 @@ public class RuletaMetodos {
         if (posicionActual==bala) {
             return true;
         }else{
-            posicionActual=(posicionActual+1)%6;
+            posicionActual=(posicionActual+1)%tambor.size();
             return false;
         }
     }
+
     public void reiniciarJuego() {
         tambor=new ArrayList<>();
         for(int i=0;i<6;i++) {
             tambor.add(i);
         }
         bala=random.nextInt(6);
-        posicionActual=0;
+        //posicionActual=random.nextInt(5);
+        posicionActual= tambor.get(0);
     }
-
 }
+
