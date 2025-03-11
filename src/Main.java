@@ -381,7 +381,9 @@ class RuletaRusa {
 //10/03/25 QUIZ PRODUCTO EN UNA TIENDA
 class Tienda {
     public static void main(String[] args) {;
-        Scanner scanner = new Scanner(System.in);
+        List<Producto> listaProductos=new ArrayList<>();
+        Producto producto=new Producto();
+        Scanner teclado = new Scanner(System.in);
         int menupr;
 
         do{
@@ -395,44 +397,117 @@ class Tienda {
             System.out.println("7. Comparar precios");
             System.out.println("8. Salir");
             System.out.print("Digite la opción: ");
-            menupr = scanner.nextInt();
+            menupr = teclado.nextInt();
 
             switch (menupr) {
                 case 1 -> {
-                    Producto.crearProducto();
-                    System.out.println("Producto agregado correctamente.");
+                    System.out.println("\n-------Crear producto------");
+                    producto.crearProducto(listaProductos);
+                    producto.mostrarInformacion(listaProductos);
                 }
+
                 case 2 ->{
-                    System.out.println("\nElija uno de los siguientes productos");
-                    Producto.mostrarInfo();
-                    Producto.venderProducto();
+                    System.out.println("\n----------Vender producto---------");
+                    System.out.println("Los productos disponibles son:");
+                    producto.mostrarInformacion(listaProductos);
+                    producto.venderProducto(listaProductos);
                 }
                 case 3 ->{
-                    System.out.println("\nElija uno de los siguientes productos");
-                    Producto.mostrarInfo();
-                    Producto.reponerStock();
+                    System.out.println("\n----------Reponer stock---------");
+                    System.out.println("Los productos disponibles son:");
+                    producto.mostrarInformacion(listaProductos);
+                    producto.reponerStock(listaProductos);
                 }
                 case 4 ->{
-                    System.out.println("\nLos productos son");
-                    Producto.mostrarInfo();
+                    System.out.println("\n-------Información de los productos-------");
+                    producto.mostrarInformacion(listaProductos);
                 }
                 case 5 ->{
-                    System.out.println("\nElija uno de los siguientes productos");
-                    Producto.mostrarInfo();
-                    Producto.aumentarPrecio();
+                    System.out.println("\n-------Aumentar precio--------");
+                    System.out.println("Los productos disponibles son:");
+                    producto.mostrarInformacion(listaProductos);
+                    producto.aumentarPrecio(listaProductos);
                 }
                 case 6 ->{
-                    System.out.println("El valor total del inventario es: " + Producto.valorTInventario()+"$");
+                    System.out.println("\n------Valor total en inventario-------");
+                    System.out.println("Los productos disponibles son:");
+                    producto.mostrarInformacion(listaProductos);
+                    producto.valorInventario(listaProductos);
                 }
                 case 7 ->{
-                    System.out.println("\nElija uno de los siguientes productos para comparar");
-                    Producto.mostrarInfo();
-                    Producto.compararPrecios();
+                    System.out.println("\n------Conparar precios-------");
+                    System.out.println("Los productos disponibles son:");
+                    producto.mostrarInformacion(listaProductos);
+                    producto.compararPrecios(listaProductos);
                 }
                 case 8 -> System.out.println("\nSaliendo de la tienda...");
                 default -> System.out.println("Opción no valida, intente de nuevo.");
             }
         }while(menupr!=8);
+    }
+}
+
+//11/03/25 PARCIAL GASTOS TELEFONICOS
+class GastoTelefonico {
+    public static void main(String[] args) {;
+        List<Cabina> listaCabinas=new ArrayList<>();
+        Cabina cabina=new Cabina();
+        Cabina a= new Cabina(1,0,0,0,0,0,0);
+        listaCabinas.add(a);
+        Scanner teclado = new Scanner(System.in);
+        int menupr;
+
+        do{
+            System.out.println("\n-----------Empresa----------");
+            System.out.println("1. Crear cabina telefonica");
+            System.out.println("2. Escoger cabina telefonica y llamar");
+            System.out.println("3. Mostrar información por cabina");
+            System.out.println("4. Mostrar consolidado total de toda la información de las cabinas");
+            System.out.println("5. Reiniciar cabina");
+            System.out.println("6. Salir");
+            System.out.print("Digite la opción: ");
+            menupr = teclado.nextInt();
+
+            switch (menupr) {
+                case 1 -> {
+                    System.out.println("\n-------Crear cabina telefonica------");
+                    cabina.crearCabina(listaCabinas);
+                    for(Cabina cab:listaCabinas) {
+                        System.out.println(cab);
+                    }
+                }
+                case 2 ->{
+                    System.out.println("\n---------Escoger cabina telefonica y llamar---------");
+                    System.out.println("Las cabinas disponibles son:");
+                    for(Cabina cab:listaCabinas) {
+                        System.out.println(cab.getId());
+                    }
+                    cabina.escogerCabina(listaCabinas);
+                }
+                case 3 ->{
+                    System.out.println("\n-------Mostrar información por cabina-------");
+                    System.out.println("Las cabinas disponibles son:");
+                    for(Cabina cab:listaCabinas) {
+                        System.out.println(cab.getId());
+                    }
+                    cabina.infoCabina(listaCabinas);
+                }
+                case 4 ->{
+                    System.out.println("\n-------Información total de todas las cabinas--------");
+                    cabina.infoTotal(listaCabinas);
+                }
+                case 5 ->{
+                    System.out.println("\n------Reiniciar cabina-------");
+                    System.out.println("Las cabinas disponibles son:");
+                    for(Cabina cab:listaCabinas) {
+                        System.out.println(cab);
+                    }
+                    cabina.reiniciarCabina(listaCabinas);
+                }
+                case 6 -> System.out.println("\nSaliendo de la empresa...");
+                default -> System.out.println("Opción no valida, intente de nuevo.");
+            }
+        }while(menupr!=7);
     }
 }
 

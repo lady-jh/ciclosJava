@@ -1,12 +1,11 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
+import java.util.List;
 
 public class Producto {
-    private static List<Producto> productos = new ArrayList<>();
     private String nombre;
     private double precio;
     private int stock;
+    Scanner teclado = new Scanner(System.in);
 
     public Producto() {
     }
@@ -25,14 +24,6 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public int getStock() {
-        return stock;
-    }
-
-    public void setStock(int stock) {
-        this.stock = stock;
-    }
-
     public double getPrecio() {
         return precio;
     }
@@ -41,163 +32,247 @@ public class Producto {
         this.precio = precio;
     }
 
-    public List<Producto> getProductos() {
-        return productos;
+    public int getStock() {
+        return stock;
     }
 
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     @Override
     public String toString() {
-        return "Producto{" +
-                "nombre='" + nombre + '\'' +
-                ", precio=" + precio +
-                ", stock=" + stock +
-                '}';
+        return "| nombre:"+nombre+" | precio:"+precio+" | stock:"+stock+" |";
     }
 
-    public static void crearProducto(){
-        Scanner teclado = new Scanner(System.in);
-        System.out.print("Ingrese el nombre del producto: ");
-        String nombre = teclado.nextLine();
-        System.out.print("Ingrese el precio del producto: ");
-        double precio = teclado.nextDouble();
-        System.out.print("Ingrese la cantidad en stock: ");
-        int stock = teclado.nextInt();
-
-        productos.add(new Producto(nombre, precio, stock));
-    }
-
-    public static void venderProducto(){
-        Scanner scanner = new Scanner(System.in);
-        int cantidad;
-        System.out.print("Ingrese el nombre del producto a vender: ");
-        String nombre = scanner.nextLine();
-
-        for (Producto p : productos) {
-            if (p.getNombre().equals(nombre)) {
-                do {
-                    System.out.print("Ingrese la cantidad a vender: ");
-                    cantidad = scanner.nextInt();
-
-                    if (cantidad > p.getStock()) {
-                        System.out.println("No hay suficiente stock para vender " + cantidad + " unidades.");
-                    } else {
-                        p.aplicarDescuento();
-                        p.setStock(p.getStock() - cantidad);
-                        System.out.println("Venta realizada con éxito. Nuevo stock: " + p.getStock());
-                        return;
+    public void crearProducto(List<Producto>listaProductos){
+        String nombre;
+        double precio;
+        int stock;
+        //NOMBRE
+        System.out.print("Digite el nombre:");
+        nombre = teclado.nextLine();
+        do {//PRECIO
+            System.out.print("Digite el precio:");
+            precio = teclado.nextDouble();
+            teclado.nextLine();
+            if(precio<=0){
+                System.out.println("El precio "+precio+" no es valido, debe ser mayor a 0$");
+            }else{
+                do {//STOCK
+                    System.out.print("Digite el stock:");
+                    stock = teclado.nextInt();
+                    teclado.nextLine();
+                    if(stock<=0){
+                        System.out.println("El stock "+stock+" no es valido, debe ser mayor a 0$");
+                    }else{//EXITO
+                        listaProductos.add(new Producto(nombre,precio,stock));
+                        System.out.println("\nProducto creado correctamente");
                     }
-                } while (cantidad < 0 || cantidad > p.getStock());
+                }while(stock<=0);
             }
-        }
-        System.out.println("Producto no encontrado.");
+        }while(precio<=0);
     }
 
-    public static void reponerStock(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Ingrese el nombre del producto a reponer: ");
-        String nombre = scanner.nextLine();
+    public void venderProducto(List<Producto> listaProductos) {
+        String nombre;
+        int descuento;
         int cantidad;
+        Producto existe = null;
 
-        do {
-            System.out.print("Ingrese la cantidad a añadir: ");
-            cantidad = scanner.nextInt();
+        do {//BUSCAR EL PRODUCTO
+            System.out.print("\nDigite el nombre del producto:");
+            nombre = teclado.nextLine();
+            for (Producto buscado : listaProductos) {
+                if (buscado.getNombre().equals(nombre)) {
+                    existe = buscado;
+                    break;
+                }
+            }
+            if (existe == null) {
+                System.out.println("El producto "+nombre+" no existe, intente de nuevo.");
+            }
+        }while(existe==null);
+
+        int stockInicial = existe.getStock();
+        do {//CANTIDAD A VENDER
+            System.out.print("Digite la cantidad a vender:");
+            cantidad = teclado.nextInt();
+            teclado.nextLine();
             if (cantidad <= 0) {
-                System.out.println("La cantidad debe ser mayor a 0. Intente de nuevo.");
+                System.out.println("La cantidad " + cantidad + " no es válida, debe ser mayor a 0.");
+            } else if (cantidad > stockInicial) {
+                System.out.println("No hay suficiente stock, el valor debe ser menor a " + stockInicial);
+            }
+        } while (cantidad <= 0 || cantidad > stockInicial);
+
+        do {//APLICAR DESCUENTO
+            System.out.print("\nDigite 1 para aplicar descuento o 2 para no aplicarlo:");
+            descuento = teclado.nextInt();
+            teclado.nextLine();
+            if (descuento == 1) {
+                double total = existe.getPrecio()-existe.aplicarDescuento();
+                existe.setStock(existe.getStock()-cantidad);
+                System.out.println("Se aplicó el descuento, precio final: " + total + "$");
+            } else if (descuento == 2) {
+                existe.setStock(existe.getStock()-cantidad);
+                System.out.println("No se aplicó el descuento, precio " + existe.getPrecio());
+            } else {
+                System.out.println("Opción no válida, digite 1 o 2.");
+            }
+        } while (descuento != 1 && descuento != 2);
+        System.out.println("Venta exitosa, nuevo stock: " + existe.getStock());
+    }
+
+    public void reponerStock(List<Producto> listaProductos){
+        String nombre;
+        int cantidad;
+        Producto existe = null;
+
+        do {//BUSCAR EL PRODUCTO
+            System.out.print("\nDigite el nombre del producto:");
+            nombre = teclado.nextLine();
+            for (Producto buscado : listaProductos) {
+                if (buscado.getNombre().equals(nombre)) {
+                    existe = buscado;
+                    break;
+                }
+            }
+            if (existe == null) {
+                System.out.println("El producto "+nombre+" no existe, intente de nuevo.");
+            }
+        }while(existe==null);
+
+        int stockInicial = existe.getStock();
+        do {//CANTIDAD A SUMAR
+            System.out.print("Digite la cantidad a agregar:");
+            cantidad = teclado.nextInt();
+            teclado.nextLine();
+            if (cantidad <= 0) {
+                System.out.println("La cantidad " + cantidad + " no es válida, debe ser mayor a 0.");
+            } else {
+                existe.setStock(existe.getStock()+cantidad);
+
+                System.out.println("Stock actualizado correctamente, pasó de "+stockInicial+" a "+existe.getStock()+" unidades.");
             }
         } while (cantidad <= 0);
-
-        for (Producto p : productos) {
-            if (p.getNombre().equals(nombre)) {
-                p.setStock(p.getStock() + cantidad);
-                System.out.println("Stock actualizado. Nueva cantidad en stock: " + p.getStock());
-                return;
-            }
-        }
-        System.out.println("Producto no encontrado.");
     }
 
-    public void aplicarDescuento(){
-        double descuento = precio * 0.02;
-        System.out.println("Se aplico un descuento del 2%, el precio fue: $" + (precio-descuento));
+    public double aplicarDescuento(){
+        double descuento=precio*0.02;
+        return descuento;
     }
 
-    public static void mostrarInfo(){
-        for(Producto lista:productos){
-            System.out.println(lista);
+    public void mostrarInformacion(List<Producto>listaProductos){
+        for(Producto producto:listaProductos) {
+            System.out.println(producto);
         }
     }
 
-    public static void aumentarPrecio(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Ingrese el nombre del producto a aumentar precio: ");
-        String nombreProducto = scanner.nextLine().toLowerCase();
+    public void aumentarPrecio(List<Producto>listaProductos){
+        String nombre;
+        double cantidad;
+        Producto existe = null;
 
-        Producto productoEncontrado = null;
-        for (Producto p : productos) {
-            if (p.nombre.equalsIgnoreCase(nombreProducto)) {
-                productoEncontrado = p;
-                break;
-            }
-        }
-
-        if (productoEncontrado != null) {
-            double porcentaje;
-            do {
-                System.out.print("Ingrese el porcentaje de aumento: ");
-                porcentaje = scanner.nextDouble();
-
-                if (porcentaje <= 0) {
-                    System.out.println("El porcentaje debe ser mayor a 0. Intente de nuevo.");
+        do {//BUSCAR EL PRODUCTO
+            System.out.print("\nDigite el nombre del producto:");
+            nombre = teclado.nextLine();
+            for (Producto buscado : listaProductos) {
+                if (buscado.getNombre().equals(nombre)) {
+                    existe = buscado;
+                    break;
                 }
-            } while (porcentaje <= 0);
-
-            double incremento = productoEncontrado.precio * (porcentaje / 100);
-            productoEncontrado.precio += incremento;
-
-            System.out.println("El nuevo precio de " + productoEncontrado.nombre + " es: $" + productoEncontrado.precio);
-        } else {
-            System.out.println("Producto no encontrado.");
-        }
-    }
-
-    public double calcularValorInventario() {
-        return this.precio * this.stock;
-    }
-
-    public static double valorTInventario(){
-        double total = 0;
-        for (Producto p : productos) {
-            total += p.calcularValorInventario();
-        }
-        return total;
-    }
-
-    public static void compararPrecios(){
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("\nIngrese el nombre del nuevo producto a comparar: ");
-        String nombreNuevoProducto = scanner.nextLine();
-        System.out.print("Ingrese el precio del nuevo producto: ");
-        double precioNuevoProducto = scanner.nextDouble();
-        scanner.nextLine();
-
-        Producto productoEnLista = null;
-        for (Producto p : productos) {
-            if (p.getNombre().equalsIgnoreCase(nombreNuevoProducto)) {
-                productoEnLista = p;
-                break;
             }
-        }
+            if (existe == null) {
+                System.out.println("El producto "+nombre+" no existe, intente de nuevo.");
+            }
+        }while(existe==null);
 
-        if (precioNuevoProducto > productoEnLista.getPrecio()) {
-            System.out.println("El producto nuevo " + nombreNuevoProducto + " es más caro: $" + precioNuevoProducto);
-        } else if (precioNuevoProducto < productoEnLista.getPrecio()) {
-            System.out.println("El producto en la tienda " + productoEnLista.getNombre() + " es más caro: $" + productoEnLista.getPrecio());
+        double precioInicial = existe.getPrecio();
+        do {//PRECIO NUEVO
+            System.out.print("Digite el porcentaje a aumentar:");
+            cantidad = teclado.nextDouble();
+            teclado.nextLine();
+            if (cantidad <= 0) {
+                System.out.println("El precio " + cantidad + " no es válido, debe ser mayor a 0.");
+            } else {
+                double aumento = (precioInicial * cantidad) / 100;
+                existe.setPrecio(precioInicial + aumento);
+                System.out.println("Precio actualizado correctamente, pasó de "+precioInicial+"$ a "+existe.getPrecio()+"$.");
+            }
+        } while (cantidad <= 0);
+    }
+
+    public void valorInventario(List<Producto>listaProductos){
+        String nombre;
+        Producto existe = null;
+
+        do {//BUSCAR EL PRODUCTO
+            System.out.print("\nDigite el nombre del producto:");
+            nombre = teclado.nextLine();
+            for (Producto buscado : listaProductos) {
+                if (buscado.getNombre().equals(nombre)) {
+                    existe = buscado;
+                    break;
+                }
+            }
+            if (existe == null) {
+                System.out.println("El producto "+nombre+" no existe, intente de nuevo.");
+            }
+        }while(existe==null);
+
+        double total=existe.getPrecio()*existe.getStock();
+        System.out.print("El valor en inventario de "+existe.getNombre()+" es "+total+"$");
+
+        double totalTodo=0;
+        for (Producto buscado : listaProductos) {
+            totalTodo += buscado.getPrecio() * buscado.getStock();
+        }
+        System.out.print("\nEl valor de todo el inventario es "+totalTodo+"$");
+    }
+
+    public void compararPrecios(List<Producto>listaProductos){
+        String nombre1,nombre2;
+        Producto pro1=null,pro2=null;
+
+        do {//BUSCAR EL PRODUCTO 1
+            System.out.print("\nDigite el nombre del primer producto:");
+            nombre1 = teclado.nextLine();
+            for (Producto buscado1 : listaProductos) {
+                if (buscado1.getNombre().equals(nombre1)) {
+                    pro1 = buscado1;
+                    break;
+                }
+            }
+            if (pro1 == null) {
+                System.out.println("El producto "+nombre1+" no existe, intente de nuevo.");
+            }
+        }while(pro1==null);
+
+        do {//BUSCAR EL PRODUCTO 2
+            System.out.print("\nDigite el nombre del segundo producto:");
+            nombre2 = teclado.nextLine();
+            for (Producto buscado2 : listaProductos) {
+                if (buscado2.getNombre().equals(nombre2)) {
+                    pro2 = buscado2;
+                    break;
+                }
+            }
+            if (pro2 == null) {
+                System.out.println("El producto "+nombre2+" no existe, intente de nuevo.");
+            }
+        }while(pro2==null);
+
+        //COMPARAR PRECIOS
+        System.out.println(pro1.getNombre()+ " cuesta " + pro1.getPrecio());
+        System.out.println(pro2.getNombre()+ " cuesta " + pro2.getPrecio());
+        if (pro1.getPrecio() > pro2.getPrecio()) {
+            System.out.println(pro1.getNombre() + " es más caro que " + pro2.getNombre());
+        } else if (pro1.getPrecio() < pro2.getPrecio()) {
+            System.out.println(pro2.getNombre() + " es más caro que " + pro1.getNombre());
         } else {
             System.out.println("Ambos productos tienen el mismo precio.");
         }
     }
 }
+
